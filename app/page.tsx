@@ -127,7 +127,7 @@ export default function PediatricArrestCalculator() {
   const copyToClipboard = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
-    } catch (_e) {
+    } catch {
       // ignore
     }
   };
@@ -304,13 +304,15 @@ function runSelfTests() {
     console.warn("Self-tests failed:", err);
   }
 }
+declare global {
+  interface Window {
+    __PEDI_WAAFELSS_TESTED__?: boolean;
+  }
+}
+
 if (typeof window !== "undefined") {
-  // avoid running more than once per page load
-  const key = "__PEDI_WAAFELSS_TESTED__" as const;
-  // @ts-ignore
-  if (!(window as any)[key]) {
-    // @ts-ignore
-    (window as any)[key] = true;
+  if (!window.__PEDI_WAAFELSS_TESTED__) {
+    window.__PEDI_WAAFELSS_TESTED__ = true;
     runSelfTests();
   }
 }
